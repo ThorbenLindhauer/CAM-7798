@@ -1,0 +1,58 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+                         http://www.springframework.org/schema/beans/spring-beans.xsd
+                         http://www.springframework.org/schema/context
+                         http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+  <context:annotation-config />
+  <bean id="workflowengine.processEngine"
+    class="org.camunda.bpm.engine.spring.container.ManagedProcessEngineFactoryBean">
+    <property name="processEngineConfiguration" ref="processEngineConfiguration" />
+  </bean>
+
+  <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+    destroy-method="close">
+    <property name="driverClassName" value="org.h2.Driver" />
+    <property name="url"
+      value="jdbc:h2:./camunda-h2-dbs/foo-engine;MVCC=TRUE;TRACE_LEVEL_FILE=0;DB_CLOSE_ON_EXIT=FALSE" />
+    <property name="username" value="sa" />
+    <property name="password" value="sa" />
+  </bean>
+
+  <bean id="txManager"
+    class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource" />
+  </bean>
+
+  <bean id="processEngineConfiguration"
+    class="org.camunda.bpm.engine.spring.SpringProcessEngineConfiguration">
+
+    <property name="processEngineName" value="foo" />
+    <property name="dataSource" ref="dataSource" />
+    <property name="transactionManager" ref="txManager" />
+    <property name="history" value="activity" />
+    <property name="databaseSchemaUpdate" value="true" />
+    <property name="idGenerator">
+      <bean
+        class="org.camunda.bpm.engine.impl.persistence.StrongUuidGenerator" />
+    </property>
+
+    <property name="authorizationEnabled" value="true" />
+    <property name="jobExecutorDeploymentAware" value="true" />
+    <property name="jobExecutorActivate" value="true" />
+
+    <property name="processEnginePlugins">
+      <list>
+        <bean id="processApplicationEventListenerPlugin"
+          class="org.camunda.bpm.application.impl.event.ProcessApplicationEventListenerPlugin" />
+        <bean id="fooPlugin"
+          class="org.camunda.bpm.example.spring.servlet.pa.FailDeploymentsPlugin" />
+      </list>
+    </property>
+  </bean>
+  <bean id="processApplication"
+    class="org.camunda.bpm.example.spring.servlet.pa.FooProcessApplication"
+    depends-on="workflowengine.processEngine" />
+
+</beans>
