@@ -18,7 +18,6 @@ import org.camunda.bpm.engine.impl.interceptor.CommandInterceptor;
 
 public class FailDeploymentCommandInterceptor extends CommandInterceptor {
 
-
   @Override
   public <T> T execute(Command<T> command) {
 
@@ -29,6 +28,5 @@ public class FailDeploymentCommandInterceptor extends CommandInterceptor {
     }
 
     return result;
-
   }
 }

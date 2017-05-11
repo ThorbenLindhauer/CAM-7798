@@ -21,5 +21,4 @@ import org.camunda.bpm.engine.spring.application.SpringServletProcessApplication
 @ProcessApplication
 public class FooProcessApplication extends SpringServletProcessApplication {
 
-
 }

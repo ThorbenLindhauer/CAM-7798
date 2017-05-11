@@ -48,6 +48,9 @@
           class="org.camunda.bpm.application.impl.event.ProcessApplicationEventListenerPlugin" />
         <bean id="fooPlugin"
           class="org.camunda.bpm.example.spring.servlet.pa.FailDeploymentsPlugin" />
+          <!-- add to activate workaround -->
+<!--         <bean id="workaroundPlugin" -->
+<!--           class="org.camunda.bpm.example.spring.servlet.pa.WorkaroundPlugin" /> -->
       </list>
     </property>
   </bean>
